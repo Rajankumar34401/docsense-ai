@@ -1,5 +1,31 @@
 {
+<<<<<<< HEAD
   "dependencies": {
     "mongoose": "^9.0.2"
+=======
+  "name": "docsense-ai",
+  "version": "1.0.0",
+  "description": "",
+  "main": "app.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node server.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Rajankumar34401/docsense-ai.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs",
+  "bugs": {
+    "url": "https://github.com/Rajankumar34401/docsense-ai/issues"
+  },
+  "homepage": "https://github.com/Rajankumar34401/docsense-ai#readme",
+  "dependencies": {
+    "@google/generative-ai": "^0.24.1",
+    "express": "^5.2.1"
+>>>>>>> main
   }
 }
