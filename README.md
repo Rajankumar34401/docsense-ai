@@ -62,6 +62,7 @@ Follow these steps:
    ```bash
    npm run dev
 
+
  | Variable | Description |
 | :--- | :--- |
 | **PORT** | The port where the server runs (e.g., 5002) |
