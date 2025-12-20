@@ -13,6 +13,20 @@ DocSens-AI* is an intelligent platform designed to process PDF documents and pro
 | 4  Gagan  | Feature Developer | MongoDB Database Integration. |
 
 ---
+**Project Structure**
+  ```text
+   DOCSENS_LEADER/
+├── docsense-ai/        # Sub-project directory
+│   ├── src/            # Core source code (AI & Logic)
+│   └── node_modules/   # Sub-folder dependencies (Ignored)
+├── .env                # Private API Keys & URI
+├── .env.example        # Template for Sir/Examiner
+├── .gitignore          # Git security file
+├── server.js           # Main Entry Point (Express)
+├── app.js              # Route & Middleware setup
+├── package.json        # Main dependencies
+└── README.md           # Project Documentation   
+```
 
 ## 🛠️ Tech Stack
 * **Backend:** Node.js, Express.js
