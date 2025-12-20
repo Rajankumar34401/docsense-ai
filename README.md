@@ -1,8 +1,6 @@
 # DocSens-AI - Document Analysis System
 
-DocSens-AI ek intelligent platform hai jo PDF documents ko process karke Gemini AI ke zariye unka summary aur answers # DocSens-AI - Document Analysis System
-
-DocSens-AI ek intelligent platform hai jo PDF documents ko process karke Gemini AI ke zariye unka summary aur answers provide karta hai.
+DocSens-AI* is an intelligent platform designed to process PDF documents and provide automated summaries and insights using *Gemini AI* integration.
 
 ---
 
@@ -43,7 +41,31 @@ Sir, project ko run karne ke liye niche diye gaye steps follow karein:
 
 4. **Run the Server:**
    ```bash
-   npm run dev   
+   npm run dev
+## How to Test with Postman
+ Download Extension for VS-Code.
+ ​To verify the PDF upload and AI processing, follow these steps:
+1. ​**Start the Server: Run npm run dev in your terminal.**
+​2. **Open Postman: Create a New HTTP Request.**
+3. **​Set Method & URL: * Choose POST from the dropdown.**
+   ​Enter URL: http://localhost:5002/api/sops/upload.
+4. ​**Configure Body:**
+   ​Go to the Body tab.
+   ​Select form-data.
+   ​In the Key field, type file and change the key type from 'Text' to 'File'.
+5. **​Upload & Send:**
+   ​Select your PDF file in the Value column.
+   ​Click Send.
+6. ​**Expected Result:** - You will receive a JSON response with the extracted SOP data from the Gemini AI.
+
+### ## Project Output & Verification
+       Below are the visual proofs of successful API testing and data storage:
+
+   #### 1. API Response (Postman)
+      ![Postman Test Result](https://github.com/user-attachments/assets/804762d1-8523-46ea-9993-57f746c4424f)
+
+   #### 2. Database Entry (MongoDB Atlas)
+      ![MongoDB Storage Proof](https://github.com/user-attachments/assets/402c22ce-5b85-4a5f-b8e0-80ed3ed53b19)
 
 
  **Project Structure**
@@ -59,3 +81,13 @@ Sir, project ko run karne ke liye niche diye gaye steps follow karein:
 ├── app.js              # Route & Middleware setup
 ├── package.json        # Main dependencies
 └── README.md           # Project Documentation   
+
+
+## Challenges & Solutions (Leadership Insights)
+      ​During the integration phase, we faced and resolved the following technical challenges:
+ **​Security & Data Privacy:**
+      Initially, sensitive configuration files (.env) were tracked by Git. We successfully implemented professional security practices using .gitignore and cleared the Git cache to ensure no private API keys were       exposed.
+**​API Integration:**
+     Mapping the JSON response from Gemini AI to our MongoDB schema required precise logic to ensure data accuracy.
+**​Large Commits:**
+   Handled large repository sync issues and optimized the project structure by excluding heavy folders like node_modules from the remote repository.
