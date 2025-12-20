@@ -62,7 +62,7 @@ Follow these steps:
    ```bash
    npm run dev
 
-   | Variable | Description |
+ | Variable | Description |
 | :--- | :--- |
 | **PORT** | The port where the server runs (e.g., 5002) |
 | **MONGO_URI** | Your MongoDB Atlas connection string |
