@@ -63,6 +63,7 @@ Follow these steps:
    npm run dev
 
 
+## Environment Variables Table
  | Variable | Description |
 | :--- | :--- |
 | **PORT** | The port where the server runs (e.g., 5002) |
