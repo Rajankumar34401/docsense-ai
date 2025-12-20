@@ -27,6 +27,10 @@ DocSens-AI is an intelligent platform that processes PDF documents using Gemini 
 ├── package.json        # Main dependencies
 └── README.md           # Project Documentation   
 ```
+### 📂 Directory Details
+* **src/**: Contains core application logic, controllers, and API routes.
+* **.env**: Stores sensitive API keys and database credentials (Security priority).
+* **.env.example**: A template file provided for the examiner to setup their environment.
 
 ## 🛠️ Tech Stack
 * **Backend:** Node.js, Express.js
@@ -57,6 +61,13 @@ Follow these steps:
 4. **Run the Server:**
    ```bash
    npm run dev
+
+   | Variable | Description |
+| :--- | :--- |
+| **PORT** | The port where the server runs (e.g., 5002) |
+| **MONGO_URI** | Your MongoDB Atlas connection string |
+| **GEMINI_API_KEY** | Your Google AI Studio API Key |
+
 ## How to Test with Postman
  Download Extension for VS-Code.
  ​To verify the PDF upload and AI processing, follow these steps:
@@ -89,4 +100,10 @@ Follow these steps:
 * **Security & Data Privacy:** Initially, sensitive configuration files (.env) were tracked by Git. We successfully implemented professional security practices using .gitignore and cleared the Git cache to ensure no private API keys were exposed.
 * **API Integration:** Mapping the JSON response from Gemini AI to our MongoDB schema required precise logic to ensure data accuracy.
 * **Large Commits:** Handled large repository sync issues and optimized the project structure by excluding heavy folders like node_modules from the remote repository.
+
+ ## 🚀 Future Roadmap
+* **Multi-Format Support**: Adding OCR for scanned PDFs and Word document processing.
+* **Frontend UI**: Developing a React-based dashboard for easy file uploads and chat.
+* **Advanced Analytics**: Implementing chat history and summary generation features.
+
 
