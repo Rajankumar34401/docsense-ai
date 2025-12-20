@@ -103,9 +103,19 @@ Follow these steps:
 * **API Integration:** Mapping the JSON response from Gemini AI to our MongoDB schema required precise logic to ensure data accuracy.
 * **Large Commits:** Handled large repository sync issues and optimized the project structure by excluding heavy folders like node_modules from the remote repository.
 
+## ⚠️ Limitations
+​While the core system is stable, we have identified the following limitations during testing:
+*  ​Single File Focus: The current version is optimized for processing one PDF at a time.
+*  ​Text-Only Extraction: It cannot currently read text from images or handwritten notes inside PDFs (requires OCR).
+*  ​API Rate Limits: Performance depends on the free tier limits of the Gemini API.
+*  ​Cold Start: Since we are using free cloud tiers (MongoDB Atlas), the first query might face a slight delay.
+
  ## 🚀 Future Roadmap
 * **Multi-Format Support**: Adding OCR for scanned PDFs and Word document processing.
 * **Frontend UI**: Developing a React-based dashboard for easy file uploads and chat.
 * **Advanced Analytics**: Implementing chat history and summary generation features.
+
+  ## 🏁 Conclusion
+​The DocSens-AI project successfully demonstrates the integration of Generative AI (Gemini) with Vector Databases (MongoDB Atlas) to create a functional RAG (Retrieval-Augmented Generation) pipeline. Our team managed to build a system that can extract, embed, and query PDF data with high accuracy, ensuring a seamless user experience for document-based chat.
 
 
