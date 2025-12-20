@@ -38,7 +38,7 @@ DocSens-AI is an intelligent platform that processes PDF documents using Gemini 
 
 ## 🚀 Setup & Installation (Instructions for Sir)
 
-follow these steps:
+Follow these steps:
 
 1. **Clone the Project:**
    ```bash
@@ -49,10 +49,11 @@ follow these steps:
    npm install
 
 3. **Environment Setup (Important):**
-   ​Project folder mein ek nayi .env file banayein.
-   ​.env.example se format copy karein aur apni Gemini API Key aur Mongo URI enter karein.
-   ​Security Note: Humne personal .env file GitHub par ignore ki hai. 
-
+  1.Create a new .env file in the project folder.
+  2.Copy the format from .env.example.
+  3.Add your Gemini API Key and Mongo URI.
+  4.Security note: The .env file is ignored by GitHub, so your keys stay private.
+  
 4. **Run the Server:**
    ```bash
    npm run dev
