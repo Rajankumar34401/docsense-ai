@@ -83,7 +83,6 @@ Sir, project ko run karne ke liye niche diye gaye steps follow karein:
 ├── package.json        # Main dependencies
 └── README.md           # Project Documentation   
 
-    ```text
 ### Challenges & Solutions (Leadership Insights)**
       ​During the integration phase, we faced and resolved the following technical challenges:
  **​Security & Data Privacy:**
