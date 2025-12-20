@@ -70,7 +70,7 @@ Sir, project ko run karne ke liye niche diye gaye steps follow karein:
 ![MongoDB Storage Proof](https://github.com/user-attachments/assets/48498951-b18f-41dc-ba40-d8d870e14a59)
 
  **Project Structure**
-
+  ```text
    DOCSENS_LEADER/
 ├── docsense-ai/        # Sub-project directory
 │   ├── src/            # Core source code (AI & Logic)
