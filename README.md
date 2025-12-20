@@ -1,6 +1,6 @@
 # DocSens-AI - Document Analysis System
 
-DocSens-AI* is an intelligent platform designed to process PDF documents and provide automated summaries and insights using *Gemini AI* integration.
+DocSens-AI is an intelligent platform that processes PDF documents using Gemini AI. It extracts text, splits it into chunks, creates embeddings, and stores them in a MongoDB vector database for fast search, summaries, and actionable insights.
 
 ---
 
@@ -38,7 +38,7 @@ DocSens-AI* is an intelligent platform designed to process PDF documents and pro
 
 ## 🚀 Setup & Installation (Instructions for Sir)
 
-Sir, project ko run karne ke liye niche diye gaye steps follow karein:
+follow these steps:
 
 1. **Clone the Project:**
    ```bash
