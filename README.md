@@ -61,11 +61,13 @@ Sir, project ko run karne ke liye niche diye gaye steps follow karein:
 ### ## Project Output & Verification
        Below are the visual proofs of successful API testing and data storage:
 
-   #### 1. API Response (Postman)
-      ![Postman Test Result](https://github.com/user-attachments/assets/804762d1-8523-46ea-9993-57f746c4424f)
+  ### 1. API Response (Postman)
 
-   #### 2. Database Entry (MongoDB Atlas)
-      ![MongoDB Storage Proof](https://github.com/user-attachments/assets/402c22ce-5b85-4a5f-b8e0-80ed3ed53b19)
+![Postman Test Result](https://github.com/user-attachments/assets/804762d1-8523-46ea-9993-57f746c4424f)
+
+  ### 2. Database Entry (MongoDB Atlas)
+
+![MongoDB Storage Proof](https://github.com/user-attachments/assets/402c22ce-5b85-4a8e-80ed-80ed3ed53b19)
 
 
  **Project Structure**
