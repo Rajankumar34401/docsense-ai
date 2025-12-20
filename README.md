@@ -82,7 +82,7 @@ Sir, project ko run karne ke liye niche diye gaye steps follow karein:
 ├── app.js              # Route & Middleware setup
 ├── package.json        # Main dependencies
 └── README.md           # Project Documentation   
-
+```
 ### Challenges & Solutions (Leadership Insights)**
       ​During the integration phase, we faced and resolved the following technical challenges:
  **​Security & Data Privacy:**
