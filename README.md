@@ -83,8 +83,8 @@ Sir, project ko run karne ke liye niche diye gaye steps follow karein:
 ├── package.json        # Main dependencies
 └── README.md           # Project Documentation   
 
-
-## Challenges & Solutions (Leadership Insights)
+    ```text
+### Challenges & Solutions (Leadership Insights)**
       ​During the integration phase, we faced and resolved the following technical challenges:
  **​Security & Data Privacy:**
       Initially, sensitive configuration files (.env) were tracked by Git. We successfully implemented professional security practices using .gitignore and cleared the Git cache to ensure no private API keys were       exposed.
