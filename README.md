@@ -7,10 +7,10 @@ DocSens-AI* is an intelligent platform designed to process PDF documents and pro
 ## 👥 Team Members & Roles
 | Name | Role | Responsibility |
 | :--- | :--- | :--- |
-| **Member 1 (Leader)** | **Lead Integrator** | **System Setup, Final AI Logic, & Merging.** |
-| Member 2 | Feature Developer | PDF Processing Module. |
-| Member 3 | Feature Developer | AI Interaction Logic. |
-| Member 4 | Feature Developer | MongoDB Database Integration. |
+| **Munish Rajan 1 (Leader)** | **Lead Integrator** | **System Setup, Final AI Logic, & Merging.** |
+| Suzzan Naaz 2 | Feature Developer | PDF Processing Module. |
+| Heni Patel 3 | Feature Developer | AI Interaction Logic. |
+| Gagan 4 | Feature Developer | MongoDB Database Integration. |
 
 ---
 
