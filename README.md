@@ -13,7 +13,7 @@ DocSens-AI* is an intelligent platform designed to process PDF documents and pro
 | 4  Gagan  | Feature Developer | MongoDB Database Integration. |
 
 ---
-**Project Structure**
+ **Project Structure**
   ```text
    DOCSENS_LEADER/
 ├── docsense-ai/        # Sub-project directory
@@ -82,20 +82,7 @@ Sir, project ko run karne ke liye niche diye gaye steps follow karein:
 ### 2. Database Entry (MongoDB Atlas)
 
 ![MongoDB Storage Proof](https://github.com/user-attachments/assets/48498951-b18f-41dc-ba40-d8d870e14a59)
-
- **Project Structure**
-  ```text
-   DOCSENS_LEADER/
-├── docsense-ai/        # Sub-project directory
-│   ├── src/            # Core source code (AI & Logic)
-│   └── node_modules/   # Sub-folder dependencies (Ignored)
-├── .env                # Private API Keys & URI
-├── .env.example        # Template for Sir/Examiner
-├── .gitignore          # Git security file
-├── server.js           # Main Entry Point (Express)
-├── app.js              # Route & Middleware setup
-├── package.json        # Main dependencies
-└── README.md           # Project Documentation   
+  ```text 
 ```
 ## Challenges & Solutions (Leadership Insights)
    ​During the integration phase, we faced and resolved the following technical challenges. 
