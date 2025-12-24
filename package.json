@@ -4,7 +4,7 @@
   "description": "RAG implementation for SOP documents using Gemini and MongoDB.",
   "main": "server.js",
   "scripts": {
-     "dev": "nodemon --max-old-space-size=8192 server.js",
+    "dev": "nodemon --max-old-space-size=8192 server.js",
     "test": "echo \"Error: no test specified\" && exit 1",
     "start": "node server.js"
   },
@@ -12,10 +12,11 @@
     "type": "git",
     "url": "git+https://github.com/Rajankumar34401/docsense-ai.git"
   },
-  "keywords": [ 
+  "keywords": [
     "rag",
     "gemini",
-    "ai"],
+    "ai"
+  ],
   "author": "",
   "license": "ISC",
   "type": "module",
@@ -24,16 +25,16 @@
   },
   "homepage": "https://github.com/Rajankumar34401/docsense-ai#readme",
   "dependencies": {
-     "@google/generative-ai": "^0.1.0",
-    "axios": "^1.6.8",
+    "@google/generative-ai": "^0.1.0",
+    "axios": "^1.13.2",
+    "cors": "^2.8.5",
     "dotenv": "^16.4.5",
     "express": "^4.19.2",
     "mongoose": "^8.3.2",
     "multer": "^1.4.5-lts.1",
-    "pdfjs-dist": "4.0.379",
-    "cors": "^2.8.5"
+    "pdfjs-dist": "4.0.379"
   },
   "devDependencies": {
     "nodemon": "^3.1.0"
-}
+  }
 }
