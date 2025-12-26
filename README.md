@@ -39,6 +39,18 @@ DocSens-AI is an intelligent platform that processes PDF documents using Gemini 
 * **Embeddings:** Google Generative AI Embeddings
 * **Environment:** Dotenv
 
+## 📈 Development Roadmap
+
+### ✅ Completed: Core Engine
+* **Vector Search Pipeline:** Fully implemented aggregation pipeline in MongoDB.
+* **Context Window Logic:** Optimized merging of queries with SOP chunks to prevent context loss.
+* **Source Citation Engine:** AI now cites the exact document and section for every answer.
+
+### 🚧 In-Progress: User Experience
+* **Real-time Streaming:** Implementing Server-Sent Events (SSE) in React for a smooth chat experience.
+* **Admin Knowledge Base:** Interface for authorized users to manage SOP documents.
+* **Persistence:** Full chat history storage and retrieval.
+
 ---
 
 ## 🚀 Setup & Installation (Instructions for Sir)
