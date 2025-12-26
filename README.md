@@ -73,9 +73,10 @@ Follow these steps:
 | **GROQ_API_KEY** | Your Groq Cloud API Key (for Fast Q&A) |
 | **VECTOR_INDEX_NAME** | The name of your MongoDB Vector Search Index |
 
-## **How to Test with Postman**
-  Download Postman Extension for VS-Code.
-**Phase 1 hase 1: Upload & Process**​ follow these steps:
+## How to Test with Postman
+     Download Postman Extension for VS-Code.
+     
+**Phase 1: Upload & Process**​ follow these steps:
 1. ​**Start the Server: Run npm run dev in your terminal.**
 ​2. **Open Postman: Create a New HTTP Request.**
 3. **​Set Method & URL: * Choose POST from the dropdown.**
