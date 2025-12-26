@@ -50,7 +50,7 @@ export const askQuestion = async (req, res) => {
       }
     ]);
 
-    if (results.length === 0) return res.json({ answer: "No relevant info found." });
+    if (results.length === 0) return res.json({ answer: "No relevant info found.", sources: []  });
 
     const context = results.map(r => `[Page ${r.page}]: ${r.chunkText}`).join("\n");
 
@@ -66,14 +66,29 @@ export const askQuestion = async (req, res) => {
       temperature: 0.5
     });
 
-    const sourceDocs = [...new Set(results.map(r => `${r.documentName} (Page ${r.page})`))];
+     const answer = completion.choices[0].message.content.trim();
 
-    res.json({ 
-      answer: completion.choices[0].message.content, 
-      sources: sourceDocs 
-    });
+    // Only return sources if the answer is not a negative/no-info response
+    const negativeIndicators = [
+  "no relevant info",
+  "not mentioned",
+  "not found",
+  "no information",
+  "no info"
+];
+
+    const hasAnswer = !negativeIndicators.some(neg => answer.toLowerCase().includes(neg));
+
+    const sourceDocs = hasAnswer
+      ? [...new Map(results.map(r => [`${r.documentName}-${r.page}`, { 
+          document: r.documentName, 
+          page: r.page 
+        }])).values()]
+      : [];
+
+    res.json({ answer, sources: sourceDocs });
   } catch (e) {
-    console.error("Ask Error:", e.message); // Yahan error log hoga
+    console.error("Ask Error:", e.message);
     res.status(500).json({ error: e.message });
   }
 };
