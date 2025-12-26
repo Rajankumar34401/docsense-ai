@@ -110,8 +110,10 @@ Follow these steps:
    Example: {"question": "What is the security protocol mentioned?"}
 4. ​**Expected Result:**
    You will receive a response with the AI answer and the source document name.
+5. ### 3. Retrieval & AI Q&A (Postman)
+*Demonstration of Groq LLM providing accurate answers based on retrieved document context.*
+![AI Chat Response](https://github.com/user-attachments/assets/7cdfa251-5ec8-440b-8d24-170193b74803)
 
-  
 ## Challenges & Solutions (Leadership Insights)
    ​During the integration phase, we faced and resolved the following technical challenges. 
 * **Security & Data Privacy:** Initially, sensitive configuration files (.env) were tracked by Git. We successfully implemented professional security practices using .gitignore and cleared the Git cache to ensure no private API keys were exposed.
