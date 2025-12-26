@@ -13,22 +13,6 @@ DocSens-AI is an intelligent platform that processes PDF documents using Gemini 
 | 4  Gagan  | Feature Developer | MongoDB Database Integration. |
 
 ---
-## 📅 Weekly Progress Reports
-
-### Week 1: The Knowledge Ingestion
-1. Project backend and repository setup completed.
-2. SOP PDF upload and text extraction feature completed.
-3. Semantic chunking and vector embedding generation completed.
-4. SOP chunks storage with metadata in MongoDB completed.
-5. Core ingestion pipeline completed.
-
-### Week 2: The Retrieval Engine
-1. Full Vector Search aggregation pipeline implementation completed.
-2. Semantic search logic for meaning-based retrieval completed.
-3. Context Window Logic (merging query + 5-6 chunks) completed.
-4. Groq LLM integration for accurate context-based Q&A completed.
-5. Source Citation and Retrieval Engine verification completed.
-
  **Project Structure**
   ```text
    DOCSENS_LEADER/
@@ -116,7 +100,7 @@ Follow these steps:
 
 ![MongoDB Storage Proof](https://github.com/user-attachments/assets/48498951-b18f-41dc-ba40-d8d870e14a59)
 
-**Phase 2: AI Chat & Retrieval (Week 2)**
+**Phase 2: AI Chat & Retrieval**
 1. ​**Open a New Request: Choose POST from the dropdown.**
    Enter URL: http://localhost:5002/api/sops/ask
 ​2. **Configure Body:**
@@ -130,8 +114,8 @@ Follow these steps:
 ## Challenges & Solutions (Leadership Insights)
    ​During the integration phase, we faced and resolved the following technical challenges. 
 * **Security & Data Privacy:** Initially, sensitive configuration files (.env) were tracked by Git. We successfully implemented professional security practices using .gitignore and cleared the Git cache to ensure no private API keys were exposed.
-* **Vector Search Accuracy (Week 2):** Fine-tuning the MongoDB Atlas Vector Search aggregation pipeline was challenging to ensure that only the most relevant document chunks are retrieved for the LLM.
-* **Context Window Management (Week 2):** Optimized the merging of user queries with 5-6 retrieved text chunks to stay within LLM token limits while maintaining high answer accuracy.
+* **Vector Search Accuracy** Fine-tuning the MongoDB Atlas Vector Search aggregation pipeline was challenging to ensure that only the most relevant document chunks are retrieved for the LLM.
+* **Context Window Management:** Optimized the merging of user queries with 5-6 retrieved text chunks to stay within LLM token limits while maintaining high answer accuracy.
 * **API Integration:** Mapping the JSON response from Gemini AI to our MongoDB schema required precise logic to ensure data accuracy.
 * **Large Commits:** Handled large repository sync issues and optimized the project structure by excluding heavy folders like node_modules from the remote repository.
 
