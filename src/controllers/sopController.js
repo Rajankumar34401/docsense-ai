@@ -1,133 +1,101 @@
-// src/controllers/sopController.js
-import axios from 'axios';
 import SOPChunk from "../models/SOPChunk.js";
 import { parsePDF } from "../utils/pdfUtils.js";
 import { getEmbedding } from "../utils/embeddings.js";
+import Groq from "groq-sdk";
 
+const groq = new Groq({ apiKey: process.env.GROQ_API_KEY });
+
+/* ---------------- PDF UPLOAD ---------------- */
 export const uploadSOP = async (req, res) => {
   try {
     if (!req.file) return res.status(400).json({ error: "No file uploaded" });
-
     const { originalname, buffer } = req.file;
-    const documentName = originalname;
 
-    
-    const chunks = await parsePDF(buffer, documentName);
+    const chunks = await parsePDF(buffer, originalname);
+    await SOPChunk.deleteMany({ documentName: originalname });
 
-    if (!Array.isArray(chunks) || chunks.length === 0) {
-      return res.status(400).json({ error: "No text extracted from PDF" });
+    const docs = [];
+    for (const c of chunks) {
+      const embedding = await getEmbedding(c.chunkText);
+      if (embedding) docs.push({ ...c, embedding });
     }
 
-    // delete existing chunks for this document (idempotent)
-    await SOPChunk.deleteMany({ documentName });
-
-    // compute embeddings in parallel but limited concurrency is better in production
-    const chunksWithEmbeddings = await Promise.all(
-      chunks.map(async (c) => {
-        const embedding = await getEmbedding(c.chunkText);
-        return {
-          ...c,
-          embedding,
-        };
-      })
-    );
-
-    await SOPChunk.insertMany(chunksWithEmbeddings);
-
-    return res.json({
-      message: "SOP indexed successfully!",
-      document: documentName,
-      chunks: chunksWithEmbeddings.length,
-    });
-  } catch (err) {
-    console.error("[uploadSOP] ERROR:", err);
-    return res.status(500).json({ error: err?.message ?? String(err) });
+    await SOPChunk.insertMany(docs);
+    res.json({ success: true, message: `${docs.length} sentences saved.` });
+  } catch (e) {
+    res.status(500).json({ error: e.message });
   }
 };
 
+/* ---------------- CHAT ASK (FIXED) ---------------- */
+export const askQuestion = async (req, res) => {
+  try {
+    // 1. History ko yahan define karein (destructure from req.body)
+    const { question, history = [] } = req.body; 
+
+    if (!question) return res.status(400).json({ error: "Question is required" });
+
+    const queryEmbedding = await getEmbedding(question);
+
+    // 2. Vector Search
+    const results = await SOPChunk.aggregate([
+      {
+        $vectorSearch: {
+          index: "vector_index",
+          path: "embedding",
+          queryVector: queryEmbedding,
+          numCandidates: 100,
+          limit: 3 // Speed ke liye limit 3 rakhi hai
+        }
+      }
+    ]);
+
+    if (results.length === 0) return res.json({ answer: "No relevant info found." });
+
+    const context = results.map(r => `[Page ${r.page}]: ${r.chunkText}`).join("\n");
+
+    // 3. Groq AI logic with History
+    const completion = await groq.chat.completions.create({
+      model: "llama-3.1-8b-instant",
+      messages: [
+        { role: "system", content: "Answer strictly based on the provided text. Mention page numbers." },
+        ...history.slice(-4), // Sirf aakhri 4 baatein yaad rakhega (Atakna band hoga)
+        { role: "user", content: `Context:\n${context}\n\nQuestion: ${question}` }
+      ],
+      max_tokens: 1024,
+      temperature: 0.5
+    });
+
+    const sourceDocs = [...new Set(results.map(r => r.documentName))];
+
+    res.json({ 
+      answer: completion.choices[0].message.content, 
+      sources: sourceDocs 
+    });
+  } catch (e) {
+    console.error("Ask Error:", e.message); // Yahan error log hoga
+    res.status(500).json({ error: e.message });
+  }
+};
+// ... baaki upload aur askQuestion wala code ...
+
+// 1. Delete SOP Logic
 export const deleteSOP = async (req, res) => {
   try {
     const { name } = req.params;
     const result = await SOPChunk.deleteMany({ documentName: name });
-    res.json({ message: `Deleted ${result.deletedCount} chunks` });
-  } catch (err) {
-    res.status(500).json({ error: err?.message ?? String(err) });
+    res.json({ success: true, message: `Deleted ${result.deletedCount} chunks of ${name}` });
+  } catch (e) {
+    res.status(500).json({ error: e.message });
   }
 };
 
+// 2. List SOPs Logic
 export const listSOPs = async (req, res) => {
   try {
-    const docs = await SOPChunk.aggregate([
-      { $group: { _id: "$documentName", chunks: { $sum: 1 } } },
-      { $project: { name: "$_id", chunks: 1, _id: 0 } },
-    ]);
+    const docs = await SOPChunk.distinct("documentName");
     res.json(docs);
-  } catch (err) {
-    res.status(500).json({ error: err?.message ?? String(err) });
-  }
-};
-export const askQuestion = async (req, res) => {
-  try {
-    const { question } = req.body;
-    if (!question) return res.status(400).json({ error: "Please provide a question" });
-
-    // A. Vector Search (Retrieval)
-    const queryEmbedding = await getEmbedding(question);
-    const results = await SOPChunk.aggregate([
-      {
-        $vectorSearch: {
-          index: "vector_index", 
-          path: "embedding",
-          queryVector: queryEmbedding,
-          numCandidates: 10,
-          limit: 3,
-        },
-      },
-    ]);
-
-    // B. Context Preparation
-    const contextText = results.map(r => r.chunkText).join("\n\n");
-    if (!contextText) {
-      return res.json({ success: false, answer: "PDF mein iska jawab nahi mila." });
-    }
-
-    // C. Generation via REST API (Using the model you see in your list)
-    const apiKey = process.env.GEMINI_API_KEY;
-    // Purana wala URL (2.0-flash) hata kar ye wala dalo:
-// Purani URL ko isse replace karo (1.5 Flash bahut zyada stable hai)
-const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash-exp:generateContent?key=${apiKey}`;
-// Note: Google API mein 2.5 ko aksar backend mein 2.0-flash-exp hi kaha jata hai.
-    const payload = {
-      contents: [{
-        parts: [{
-          text: `Use this context to answer the question.\n\nContext: ${contextText}\n\nQuestion: ${question}`
-        }]
-      }]
-    };
-
-    const apiResponse = await axios.post(url, payload, {
-        headers: { 'Content-Type': 'application/json' }
-    });
-
-    // D. Extract Answer
-    if (apiResponse.data.candidates && apiResponse.data.candidates[0].content) {
-      const finalAnswer = apiResponse.data.candidates[0].content.parts[0].text;
-      
-      res.json({
-        success: true,
-        answer: finalAnswer,
-        sources: results.map(r => r.documentName)
-      });
-    } else {
-      throw new Error("AI ne response format galat bheja hai.");
-    }
-
-  } catch (err) {
-    // Ye line aapko terminal mein clear error dikhayegi
-    console.error("DEBUG ERROR:", err.response?.data || err.message);
-    res.status(500).json({ 
-      error: "AI Generation failed", 
-      details: err.response?.data?.error?.message || err.message 
-    });
+  } catch (e) {
+    res.status(500).json({ error: e.message });
   }
 };
