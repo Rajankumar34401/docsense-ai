@@ -21,7 +21,7 @@ export const uploadSOP = async (req, res) => {
     }
 
     await SOPChunk.insertMany(docs);
-    res.json({ success: true, message: `${docs.length} sentences saved.` });
+    res.json({ success: true, message:`Successfully ingested ${docs.length} chunks from ${originalname}.`  });
   } catch (e) {
     res.status(500).json({ error: e.message });
   }
@@ -66,7 +66,7 @@ export const askQuestion = async (req, res) => {
       temperature: 0.5
     });
 
-    const sourceDocs = [...new Set(results.map(r => r.documentName))];
+    const sourceDocs = [...new Set(results.map(r => `${r.documentName} (Page ${r.page})`))];
 
     res.json({ 
       answer: completion.choices[0].message.content, 
