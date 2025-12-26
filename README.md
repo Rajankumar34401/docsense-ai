@@ -142,13 +142,6 @@ Follow these steps:
 * **API Rate Limits:** Performance depends on the free tier limits of both Gemini (for embeddings) and Groq (for inference).
 * **Cold Start:** Since we are using free cloud tiers (MongoDB Atlas), the first query might face a slight delay while the connection wakes up.
 
- ## 🚀 Future Roadmap
-* **Multi-Format Support**: Adding OCR for scanned PDFs and Word document processing (DOCX).
-* **Cross-Document Chat**: Enabling the AI to retrieve and compare information from multiple uploaded PDFs simultaneously.
-* **Frontend UI**: Developing a React-based dashboard for a seamless user experience, including file drag-and-drop and a chat interface.
-* **Conversational Memory**: Implementing persistent chat history so the AI remembers previous questions in a session.
-* **Advanced Analytics**: Generating automated summaries and key-insight reports for every uploaded document.
-
   ## 🏁 Conclusion
 The DocSens-AI project successfully demonstrates the integration of Generative AI (Gemini/Groq) with Vector Databases (MongoDB Atlas) to create a functional RAG pipeline. Our team managed to build a system that can extract, embed, and query PDF data with high accuracy, ensuring a seamless user experience for document-based chat.
 
