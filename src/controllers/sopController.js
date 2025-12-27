@@ -67,8 +67,9 @@ export const askQuestion = async (req, res) => {
         {
           role: "system",
           content:
-            "You are a policy assistant. Answer ONLY using the provided context. Cite page and section exactly as shown. " +
-            "If the answer is missing or unclear, say: 'I don’t know based on the current policy context.' Do NOT invent details."
+           "You are a document Q&A assistant. Answer ONLY using the provided context. Cite page and section exactly as shown. " +
+           "If the answer is missing or unclear, say: 'I don’t know based on the current context.' Do NOT invent details."
+
         },
         ...history.slice(-4),
         { role: "user", content: `Context:\n${context}\n\nQuestion: ${question}` }
