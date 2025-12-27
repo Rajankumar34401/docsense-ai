@@ -18,8 +18,6 @@ const upload = multer({
 router.post("/upload", upload.single("file"), uploadSOP);
 router.delete("/:name", deleteSOP);
 router.get("/list", listSOPs);
-
-
 router.post("/ask", askQuestion); 
 
 export default router;
