@@ -30,68 +30,79 @@ export const uploadSOP = async (req, res) => {
 /* ---------------- CHAT ASK (FIXED) ---------------- */
 export const askQuestion = async (req, res) => {
   try {
-    // 1. History ko yahan define karein (destructure from req.body)
-    const { question, history = [] } = req.body; 
+    const { question, history = [] } = req.body;
 
     if (!question) return res.status(400).json({ error: "Question is required" });
 
     const queryEmbedding = await getEmbedding(question);
 
-    // 2. Vector Search
+    // 🔹 Retrieve ~35 best chunks (RAG spec)
     const results = await SOPChunk.aggregate([
       {
         $vectorSearch: {
           index: "vector_index",
           path: "embedding",
           queryVector: queryEmbedding,
-          numCandidates: 100,
-          limit: 3 // Speed ke liye limit 3 rakhi hai
+          numCandidates: 200,
+          limit: 35
         }
       }
     ]);
 
-    if (results.length === 0) return res.json({ answer: "No relevant info found.", sources: []  });
+    if (results.length === 0)
+      return res.json({ answer: "No relevant info found.", sources: [] });
 
-    const context = results.map(r => `[Page ${r.page}]: ${r.chunkText}`).join("\n");
+    // 🔹 Build context, but keep it safe (max 9–10k characters)
+    let context = "";
+    for (const r of results) {
+      const line = `[${r.documentName} | Page ${r.page}${r.section ? ` | Section ${r.section}` : ""}]\n${r.chunkText}\n\n`;
+      if ((context + line).length > 9000) break;
+      context += line;
+    }
 
-    // 3. Groq AI logic with History
+    // 🔹 Strong hallucination guardrails
     const completion = await groq.chat.completions.create({
       model: "llama-3.1-8b-instant",
       messages: [
-        { role: "system", content: "Answer strictly based on the provided text. Mention page numbers." },
-        ...history.slice(-4), // Sirf aakhri 4 baatein yaad rakhega (Atakna band hoga)
+        {
+          role: "system",
+          content:
+            "You are a policy assistant. Answer ONLY using the provided context. Cite page and section exactly as shown. " +
+            "If the answer is missing or unclear, say: 'I don’t know based on the current policy context.' Do NOT invent details."
+        },
+        ...history.slice(-4),
         { role: "user", content: `Context:\n${context}\n\nQuestion: ${question}` }
       ],
       max_tokens: 1024,
-      temperature: 0.5
+      temperature: 0.2
     });
 
-     const answer = completion.choices[0].message.content.trim();
+    const answer = completion.choices[0].message.content.trim();
 
-    // Only return sources if the answer is not a negative/no-info response
-    const negativeIndicators = [
-  "no relevant info",
-  "not mentioned",
-  "not found",
-  "no information",
-  "no info"
-];
+    // 🔹 Only cite pages that actually appeared in retrieval
+    const uniqueSources = [
+      ...new Map(
+        results.map(r => [
+          `${r.documentName}-${r.page}-${r.section || ""}`,
+          {
+            document: r.documentName,
+            page: r.page,
+            section: r.section || null
+          }
+        ])
+      ).values()
+    ];
 
-    const hasAnswer = !negativeIndicators.some(neg => answer.toLowerCase().includes(neg));
+    res.json({ answer, sources: uniqueSources });
 
-    const sourceDocs = hasAnswer
-      ? [...new Map(results.map(r => [`${r.documentName}-${r.page}`, { 
-          document: r.documentName, 
-          page: r.page 
-        }])).values()]
-      : [];
-
-    res.json({ answer, sources: sourceDocs });
   } catch (e) {
     console.error("Ask Error:", e.message);
     res.status(500).json({ error: e.message });
   }
 };
+
+
+   
 // ... baaki upload aur askQuestion wala code ...
 
 // 1. Delete SOP Logic

@@ -12,17 +12,28 @@ export const parsePDF = async (buffer, documentName) => {
     const text = content.items.map(item => item.str).join(" ").replace(/\s+/g, " ");
 
     // Split into sentences for exact line matching
-    const sentences = text.split(/(?<=[.?!])\s+/);
-    sentences.forEach(s => {
-      const clean = s.trim();
-      if (clean.length > 20) {
-        chunks.push({
-          documentName,
-          page: i.toString(),
-          chunkText: clean
-        });
-      }
+    let currentSection = "General";
+
+const sentences = text.split(/(?<=[.?!])\s+/);
+
+sentences.forEach(s => {
+  const clean = s.trim();
+
+  // crude heading detector (UPPERCASE lines or long title-like strings)
+  if (/^[A-Z0-9\s-]{6,}$/.test(clean) && clean.length < 120) {
+    currentSection = clean;
+  }
+
+  if (clean.length > 20) {
+    chunks.push({
+      documentName,
+      page: i.toString(),
+      section: currentSection,
+      chunkText: clean
     });
+  }
+});
+
   }
   return chunks;
 };
