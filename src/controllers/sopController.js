@@ -44,7 +44,7 @@ export const askQuestion = async (req, res) => {
           path: "embedding",
           queryVector: queryEmbedding,
           numCandidates: 200,
-          limit: 35
+          limit: 5
         }
       }
     ]);
