@@ -1,0 +1,144 @@
+export const getAllAdmins = async (req, res) => {
+  try {
+    // 1. Pehle dekho request karne wala user kaun hai (Database se fresh data lo)
+    const freshUser = await User.findById(req.user.id);
+    if (!freshUser) return res.status(404).json({ message: "User not found" });
+
+    const isHead = freshUser.email.toLowerCase().trim() === process.env.HEAD_ADMIN_EMAIL?.toLowerCase().trim();
+    
+    // 2. Agar wo Head Admin nahi hai AUR uske paas invite access bhi nahi hai, toh 403 do
+    if (!isHead && !freshUser.canInvite) {
+      return res.status(403).json({ message: "Access Denied: You don't have permission to view/manage admins" });
+    }
+
+    // 3. Agar permission hai, toh saare admins ki list dikhao
+    const admins = await User.find({ role: 'admin' }).select('-password');
+    const adminList = admins.map(adm => ({
+      ...adm._doc,
+      isHead: adm.email.toLowerCase().trim() === process.env.HEAD_ADMIN_EMAIL?.toLowerCase().trim()
+    }));
+    
+    res.json(adminList);
+  } catch (err) {
+    res.status(500).json({ message: "Server Error", error: err.message });
+  }
+};
+
+// --- 5. CREATE INVITE (Fixed for Sub-Admins) ---
+export const createInvite = async (req, res) => {
+  try {
+    const { email } = req.body;
+    const normalizedEmail = email.toLowerCase().trim();
+
+    // 1. Database se us Admin ki details nikalo jo invite bhejna chahta hai
+    const requester = await User.findById(req.user.id);
+    if (!requester) return res.status(404).json({ message: "Admin user not found" });
+
+    const isHead = requester.email.toLowerCase().trim() === process.env.HEAD_ADMIN_EMAIL?.toLowerCase().trim();
+
+    // 2. SECURITY CHECK: Kya ye Head Admin hai? YA kya is Admin ko 'canInvite' access mila hai?
+    // Screenshot 403 yahan se trigger ho raha tha
+    if (!isHead && requester.canInvite !== true) {
+      return res.status(403).json({ message: "Forbidden: You do not have permission to send invites" });
+    }
+
+    // 3. Invite logic (Token generate karna)
+    const token = crypto.randomBytes(32).toString('hex');
+    await Invite.findOneAndUpdate(
+      { email: normalizedEmail },
+      { token, expiresAt: Date.now() + 86400000 }, 
+      { upsert: true }
+    );
+
+    const inviteLink = `${process.env.FRONTEND_URL}/signup?token=${token}&email=${normalizedEmail}`;
+
+    // 4. Email setup (Nodemailer)
+    const transporter = nodemailer.createTransport({
+      host: 'smtp.gmail.com',
+      port: 465,
+      secure: true, 
+      auth: {
+        user: process.env.EMAIL_USER,
+        pass: process.env.EMAIL_PASS,
+      },
+    });
+    
+    const mailOptions = {
+      from: `"OpsMind AI Admin" <${process.env.EMAIL_USER}>`,
+      to: email,
+      subject: '🛡️ Invitation to join OpsMind AI as Admin',
+      html: `
+        <div style="font-family: Arial; padding: 20px; border: 1px solid #eee; border-radius: 10px;">
+          <h2 style="color: #4f46e5;">OpsMind AI</h2>
+          <p>You have been invited to join as an <strong>Administrator</strong>.</p>
+          <div style="margin: 30px 0;">
+            <a href="${inviteLink}" style="background: #4f46e5; color: white; padding: 12px 25px; text-decoration: none; border-radius: 5px;">
+              Accept Invitation & Register
+            </a>
+          </div>
+        </div>`
+    };
+
+    await transporter.sendMail(mailOptions);
+    res.json({ message: "Invite link sent!", inviteLink });
+  } catch (err) {
+    res.status(500).json({ message: "Email failed.", error: err.message });
+  }
+};
+// --- 6. TOGGLE ACCESS (Head Admin control) ---
+export const toggleInviteAccess = async (req, res) => {
+  try {
+    const requester = await User.findById(req.user.id);
+    const HEAD_ADMIN = process.env.HEAD_ADMIN_EMAIL?.toLowerCase().trim();
+    
+    if (requester.email.toLowerCase().trim() !== HEAD_ADMIN) {
+      return res.status(403).json({ message: "Only Head Admin can change permissions" });
+    }
+
+    const { adminId } = req.params;
+    const { canInvite } = req.body;
+    await User.findByIdAndUpdate(adminId, { canInvite });
+    res.json({ message: "Access updated successfully" });
+  } catch (err) {
+    res.status(500).json({ message: "Toggle failed", error: err.message });
+  }
+};
+
+// --- 7. REMOVE ADMIN (Updated Logic) ---
+export const removeAdmin = async (req, res) => {
+  try {
+    const requesterId = req.user.id; // Jo remove karne ki koshish kar raha hai
+    const targetAdminId = req.params.adminId; // Jise remove kiya ja raha hai
+
+    const requester = await User.findById(requesterId);
+    const HEAD_ADMIN_EMAIL = process.env.HEAD_ADMIN_EMAIL?.toLowerCase().trim();
+    const isHeadAdmin = requester.email.toLowerCase().trim() === HEAD_ADMIN_EMAIL;
+
+    // 1. Agar request karne wala Head Admin hai
+    if (isHeadAdmin) {
+      // Head Admin kisi ko bhi remove kar sakta hai, lekin khud ko nahi (taaki system lock na ho jaye)
+      const adminToDelete = await User.findById(targetAdminId);
+      if (adminToDelete.email.toLowerCase().trim() === HEAD_ADMIN_EMAIL) {
+        return res.status(400).json({ message: "Master Account cannot be removed!" });
+      }
+      
+      await User.findByIdAndDelete(targetAdminId);
+      return res.json({ message: "Admin removed successfully by Head Admin." });
+    }
+
+    // 2. Agar request karne wala Sub-Admin hai
+    // Wo sirf apni ID check karega, agar ID match hui toh delete karega, warna error
+    if (requesterId === targetAdminId) {
+      await User.findByIdAndDelete(requesterId);
+      return res.json({ message: "Your account has been deleted successfully." });
+    } else {
+      // Agar Sub-Admin kisi aur ki ID bhej raha hai
+      return res.status(403).json({ 
+        message: "Permission Denied: You can only remove your own account." 
+      });
+    }
+
+  } catch (err) {
+    res.status(500).json({ message: "Delete failed", error: err.message });
+  }
+};
