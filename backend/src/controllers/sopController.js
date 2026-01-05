@@ -5,96 +5,93 @@ import Groq from "groq-sdk";
 
 const groq = new Groq({ apiKey: process.env.GROQ_API_KEY });
 
-/* ---------------- PDF UPLOAD ---------------- */
+/* ---------------- 1. PDF UPLOAD (CLEANED) ---------------- */
 export const uploadSOP = async (req, res) => {
   try {
     if (!req.file) return res.status(400).json({ error: "No file uploaded" });
     const { originalname, buffer } = req.file;
 
-    const chunks = await parsePDF(buffer, originalname);
+    // Pehle purana data delete karein taaki 768 dimensions fresh rahein
     await SOPChunk.deleteMany({ documentName: originalname });
 
+    const chunks = await parsePDF(buffer, originalname);
     const docs = [];
+
     for (const c of chunks) {
       const embedding = await getEmbedding(c.chunkText);
-      if (embedding) docs.push({ ...c, embedding });
+      // Ensure karein ki embedding ki length 768 hai
+      if (embedding) {
+        docs.push({ ...c, embedding });
+      }
     }
 
     await SOPChunk.insertMany(docs);
-    res.json({ success: true, message:`Successfully ingested ${docs.length} chunks from ${originalname}.`  });
+    res.json({ success: true, message: `Successfully ingested ${docs.length} chunks.` });
   } catch (e) {
+    console.error("Upload Error:", e.message);
     res.status(500).json({ error: e.message });
   }
 };
 
-/* ---------------- CHAT ASK (FIXED) ---------------- */
+/* ---------------- 2. CHAT ASK (SMART & FLEXIBLE) ---------------- */
 export const askQuestion = async (req, res) => {
   try {
     const { question, history = [] } = req.body;
 
     if (!question) return res.status(400).json({ error: "Question is required" });
 
+    // 1. Get embedding for the user question (768 dimensions)
     const queryEmbedding = await getEmbedding(question);
 
-    // 🔹 Retrieve ~35 best chunks (RAG spec)
+    // 2. Vector Search in MongoDB
     const results = await SOPChunk.aggregate([
       {
         $vectorSearch: {
-          index: "vector_index",
+          index: "vector_index", // Iska naam MongoDB Atlas mein exact yahi hona chahiye
           path: "embedding",
           queryVector: queryEmbedding,
-          numCandidates: 200,
-          limit: 15
+          numCandidates: 100,
+          limit: 10
         }
       }
     ]);
 
-    if (results.length === 0)
-      return res.json({ answer: "No relevant info found.", sources: [] });
+    // Debugging: Terminal mein check karein data aa raha hai ya nahi
+    console.log(`Found ${results.length} relevant chunks for this question.`);
 
-    // 🔹 Build context, but keep it safe (max 9–10k characters)
+    // 3. Build context from retrieved chunks
     let context = "";
-    for (const r of results) {
-      const line = `[${r.documentName} | Page ${r.page}${r.section ? ` | Section ${r.section}` : ""}]\n${r.chunkText}\n\n`;
-      if ((context + line).length > 9000) break;
-      context += line;
-    }
+    results.forEach(r => {
+      context += `[Source: ${r.documentName}, Page: ${r.page}]\n${r.chunkText}\n\n`;
+    });
 
-    // 🔹 Strong hallucination guardrails
+    // 4. Groq Completion with ChatGPT-like flexibility
     const completion = await groq.chat.completions.create({
-      model: "llama-3.1-8b-instant",
+      model: "llama-3.3-70b-versatile", // ChatGPT jaisa bada model use karein
       messages: [
         {
           role: "system",
-          content:
-           "You are a document Q&A assistant. Answer ONLY using the provided context. Cite page and section exactly as shown. " +
-           "If the answer is missing or unclear, say: 'I don’t know based on the current context.' Do NOT invent details."
-
+          content: "You are a highly intelligent AI assistant. Use the provided context to answer questions accurately. If the context doesn't have the answer, use your general knowledge to help, but clearly state that this info is not in the document."
         },
-        ...history.slice(-4),
-        { role: "user", content: `Context:\n${context}\n\nQuestion: ${question}` }
+        ...history.slice(-4), // Last 4 messages for conversation history
+        { 
+          role: "user", 
+          content: `Document Context:\n${context || "No relevant document context found."}\n\nUser Question: ${question}` 
+        }
       ],
-      max_tokens: 1024,
-      temperature: 0.2
+      temperature: 0.5, // 0.2 se badha kar 0.5 kiya taaki ye ChatGPT jaisa creative lage
+      max_tokens: 1024
     });
 
-    const answer = completion.choices[0].message.content.trim();
+    const answer = completion.choices[0].message.content;
+    
+    // 5. Sources format karna
+    const uniqueSources = [...new Set(results.map(r => `Page ${r.page}`))];
 
-    // 🔹 Only cite pages that actually appeared in retrieval
-    const uniqueSources = [
-      ...new Map(
-        results.map(r => [
-          `${r.documentName}-${r.page}-${r.section || ""}`,
-          {
-            document: r.documentName,
-            page: r.page,
-            section: r.section || null
-          }
-        ])
-      ).values()
-    ];
-
-    res.json({ answer, sources: uniqueSources });
+    res.json({ 
+      answer, 
+      sources: results.length > 0 ? uniqueSources : ["General Knowledge"] 
+    });
 
   } catch (e) {
     console.error("Ask Error:", e.message);
@@ -102,22 +99,17 @@ export const askQuestion = async (req, res) => {
   }
 };
 
-
-   
-// ... baaki upload aur askQuestion wala code ...
-
-// 1. Delete SOP Logic
+/* ---------------- 3. LIST & DELETE ---------------- */
 export const deleteSOP = async (req, res) => {
   try {
     const { name } = req.params;
-    const result = await SOPChunk.deleteMany({ documentName: name });
-    res.json({ success: true, message: `Deleted ${result.deletedCount} chunks of ${name}` });
+    await SOPChunk.deleteMany({ documentName: name });
+    res.json({ success: true, message: `Deleted ${name}` });
   } catch (e) {
     res.status(500).json({ error: e.message });
   }
 };
 
-// 2. List SOPs Logic
 export const listSOPs = async (req, res) => {
   try {
     const docs = await SOPChunk.distinct("documentName");
