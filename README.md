@@ -1,31 +1,81 @@
-# DocSens-AI - Document Analysis System
+# DocSens-AI – Intelligent Document Analysis System (RAG Based)
 
-DocSens-AI is an intelligent platform that processes PDF documents using Gemini AI. It extracts text, splits it into chunks, creates embeddings, and stores them in a MongoDB vector database for fast search, summaries, and actionable insights.
+DocSens-AI is a **Context-Aware Document Intelligence Platform** that processes PDF documents and enables semantic search, AI-powered Q&A, and actionable insights.  
+The system is built using a **Retrieval-Augmented Generation (RAG)** architecture powered by **Google Gemini AI** for embeddings and **Groq Cloud (LLaMA 3 / Mixtral)** for high-speed inference, with **MongoDB Atlas Vector Search** as the backbone.
+
+This project is developed as a **company-oriented academic project**, demonstrating real-world application of **AI + Full-Stack Development**.
+
+---
+
+## 🎯 Project Objective
+- Convert static PDF documents into a **searchable knowledge base**
+- Provide **accurate, citation-based AI answers**
+- Prevent hallucinations using **strict document grounding**
+- Demonstrate a **production-grade RAG pipeline**
 
 ---
 
 ## 👥 Team Members & Roles
-| Name | Role | Responsibility |
-| :--- | :--- | :--- |
-| **1 Munish Rajan (Leader)** | **Lead Integrator** | **System Setup, Final AI Logic, Vector Search Pipeline, Context Logic & Groq Integration.** |
-| 2 Suzzan Naaz | Feature Developer | PDF Processing Module & Text Extraction. |
-| 3 Heni Patel | Feature Developer | Initial AI Interaction Logic & Prompting. |
-| 4 Gagan | Feature Developer | MongoDB Database Integration & Schema Design. |
+
+| Name | Role | Responsibilities |
+|---|---|---|
+| **Munish Rajan (Leader)** | **Lead Integrator & System Architect** | System Architecture, Master Admin Logic (`canInvite`), MongoDB Vector Search Aggregation Pipeline, Context Window Logic, SSE Streaming, Groq Integration |
+| Suzzan Naaz | AI Logic Developer | Prompt Engineering, Gemini Embedding Integration, RAG Logic Optimization, Zero-Hallucination Enforcement |
+| Heni Patel | Frontend & Auth Developer | JWT Authentication, Login / Signup / Reset Password UI, Frontend State Management |
+| Gagan | Database & DevOps Specialist | MongoDB Atlas Vector Indexing, Schema Design, Git Branching Strategy, Knowledge Base Storage |
 
 ---
- **Project Structure**
-  ```text
-   DOCSENS_LEADER/
-├── docsense-ai/        # Sub-project directory
-│   ├── src/            # Core source code (AI & Logic)
-│   └── node_modules/   # Sub-folder dependencies (Ignored)
-├── .env                # Private API Keys & URI
-├── .env.example        # Template for Sir/Examiner
-├── .gitignore          # Git security file
-├── server.js           # Main Entry Point (Express)
-├── app.js              # Route & Middleware setup
-├── package.json        # Main dependencies
-└── README.md           # Project Documentation   
+
+## 🧠 System Architecture Overview
+
+DocSens-AI follows a **multi-layered RAG architecture**:
+
+1. **Document Ingestion**
+   - PDF upload
+   - Text extraction
+   - Page-aware chunking
+
+2. **Vectorization**
+   - Embeddings generated using **Gemini AI**
+   - Stored in **MongoDB Atlas Vector Index**
+
+3. **Retrieval**
+   - MongoDB Aggregation Pipeline
+   - Top relevant chunks retrieved via semantic similarity
+
+4. **Generation**
+   - Query + context merged
+   - Answer generated using **Groq LLM**
+   - Source citation attached
+
+---
+
+## 📁 Project Structure
+
+```text
+DOCSENS_LEADER/
+├── frontend/                 # React.js (Vite)
+│   ├── src/
+│   │   ├── components/       # Navbar, Sidebar, UI components
+│   │   ├── pages/            # Login, ResetPassword, UserChat
+│   │   └── App.jsx           # Routing
+│   ├── package.json
+│   └── vite.config.js
+│
+├── backend/                  # Node.js + Express AI Server
+│   ├── src/
+│   │   ├── controllers/      # Auth + AI logic
+│   │   ├── models/           # MongoDB schemas
+│   │   ├── routes/           # API routes (Gemini & Groq)
+│   │   └── utils/            # RAG, chunking, vector search
+│   ├── server.js
+│   └── package.json
+│
+├── .env                      # API Keys (Ignored by Git)
+├── .env.example              # Setup reference for examiner
+├── .gitignore
+└── README.md
+
 ```
 ### 📂 Directory Details
 * **src/**: Contains core application logic, controllers, and API routes.
