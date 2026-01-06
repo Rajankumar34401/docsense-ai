@@ -299,3 +299,87 @@ export const removeAdmin = async (req, res) => {
     res.status(500).json({ message: "Delete failed", error: err.message });
   }
 };
+ 
+
+
+export const forgotPassword = async (req, res) => {
+  try {
+    const { email } = req.body;
+    const user = await User.findOne({ email: email.toLowerCase().trim() });
+
+    // Security tip: Hum humesha 'success' message dete hain taaki koi email fish na kar sake
+    if (!user) {
+      return res.status(200).json({ message: "If an account exists with this email, a reset link has been sent." });
+    }
+
+    // 1. Reset Token banayein (1 ghante ke liye valid)
+    const resetToken = crypto.randomBytes(32).toString('hex');
+    user.resetPasswordToken = resetToken;
+    user.resetPasswordExpires = Date.now() + 3600000; // 1 hour
+    await user.save();
+
+    // 2. Email setup
+    const transporter = nodemailer.createTransport({
+      host: 'smtp.gmail.com',
+      port: 465,
+      secure: true,
+      auth: {
+        user: process.env.EMAIL_USER,
+        pass: process.env.EMAIL_PASS,
+      },
+    });
+
+    const resetLink = `${process.env.FRONTEND_URL}/reset-password?token=${resetToken}`;
+
+    const mailOptions = {
+      from: `"OpsMind AI Support" <${process.env.EMAIL_USER}>`,
+      to: user.email,
+      subject: '🔒 Password Reset Request - OpsMind AI',
+      html: `
+        <div style="font-family: Arial; padding: 20px;">
+          <h2>Password Reset</h2>
+          <p>Aapne password reset karne ki request ki hai. Niche diye gaye button par click karein:</p>
+          <a href="${resetLink}" style="background: #00684a; color: white; padding: 10px 20px; text-decoration: none; border-radius: 5px; display: inline-block; margin: 20px 0;">
+            Reset Password
+          </a>
+          <p>Ye link 1 ghante mein expire ho jayega.</p>
+        </div>`
+    };
+
+    await transporter.sendMail(mailOptions);
+    res.json({ message: "If an account exists with this email, a reset link has been sent." });
+
+  } catch (err) {
+    console.error("Forgot Password Error:", err);
+    res.status(500).json({ message: "Server error. Please try again later." });
+  }
+};
+export const resetPassword = async (req, res) => {
+  try {
+    const { token, password } = req.body;
+
+    // 1. Token check karein aur dekhein ki kya wo expire toh nahi hua
+    const user = await User.findOne({
+      resetPasswordToken: token,
+      resetPasswordExpires: { $gt: Date.now() }, // $gt matlab 'Greater Than' (Expire nahi hua)
+    });
+
+    if (!user) {
+      return res.status(400).json({ message: "Invalid or expired reset token." });
+    }
+
+    // 2. Naya password hash karein
+    const salt = await bcrypt.genSalt(10);
+    user.password = await bcrypt.hash(password, salt);
+
+    // 3. Token clear karein taaki wo dubara use na ho sake
+    user.resetPasswordToken = undefined;
+    user.resetPasswordExpires = undefined;
+
+    await user.save();
+
+    res.json({ message: "Password updated successfully! You can now log in." });
+  } catch (err) {
+    res.status(500).json({ message: "Reset failed", error: err.message });
+  }
+};
