@@ -1,6 +1,6 @@
-# DocSens-AI – Intelligent Document Analysis System (RAG Based)
+# OpsMind-AI – Intelligent Document Analysis System (RAG Based)
 
-DocSens-AI is a **Context-Aware Document Intelligence Platform** that processes PDF documents and enables semantic search, AI-powered Q&A, and actionable insights.  
+OpsMind-AI is a **Context-Aware Document Intelligence Platform** that processes PDF documents and enables semantic search, AI-powered Q&A, and actionable insights.  
 The system is built using a **Retrieval-Augmented Generation (RAG)** architecture powered by **Google Gemini AI** for embeddings and **Groq Cloud (LLaMA 3 / Mixtral)** for high-speed inference, with **MongoDB Atlas Vector Search** as the backbone.
 
 This project is developed as a **company-oriented academic project**, demonstrating real-world application of **AI + Full-Stack Development**.
