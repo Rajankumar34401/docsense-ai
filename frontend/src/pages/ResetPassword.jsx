@@ -25,7 +25,7 @@ export default function ResetPassword() {
             });
             const data = await res.json();
             if (res.ok) {
-                alert("Password badal gaya! Ab login karein.");
+                alert("Password has been changed.Please login again.");
                 navigate('/login');
             } else {
                 alert(data.message);
