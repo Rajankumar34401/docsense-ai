@@ -163,9 +163,13 @@ A full-stack AI-powered RAG system for SOP management and grounded Q&A with role
    - `MONGO_URI=mongodb+srv://...`
    - `JWT_SECRET=super_secret_string`
    - `EMBEDDING_PROVIDER=gemini`
-   - `EMBEDDING_API_KEY=xxxxx`
+   - `GEMINI_API_KEY==xxxxx`
    - `GROQ_API_KEY=xxxxx`
+   - `GOOGLE_CLIENT_ID=xxxxx`
+   - `EMAIL_USER=xxxxx`
+   - `EMAIL_PASS=xxxxx`
    - `ALLOWED_ORIGINS=http://localhost:5173`
+
 3. **Run backend (dev)**
    - `npm run dev` → `http://localhost:3000`
 
