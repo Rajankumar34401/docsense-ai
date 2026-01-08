@@ -152,7 +152,55 @@ A full-stack AI-powered RAG system for SOP management and grounded Q&A with role
 - **RBAC roles:** Head Admin, Admin, User
 
 ---
+## 📊 UML Use Case Diagram
 
+The following diagram illustrates the main actors and use cases in **OpsMind AI**, showing both **frontend interactions** and **backend responsibilities**.
+
+### 🎭 Actors
+- **Head Admin** – Super administrator with full control
+- **Admin** – Manages SOP documents
+- **User (Employee)** – Queries SOPs via chat
+- **Frontend (React/Vite)** – UI layer for chat & dashboards
+- **Backend (Node.js/Express)** – API layer with RBAC enforcement
+- **MongoDB Atlas** – Vector DB for SOP chunks & embeddings
+- **Gemini API** – Generates embeddings
+- **Groq API** – Provides inference for answers
+
+---
+
+### 📌 Use Cases
+
+**Head Admin**
+- Register/Login (auto‑assigned via `.env` email)
+- Invite Admin (generate token)
+- Revoke Admin Access
+- Manage Admin Permissions
+- Upload/Delete/Re‑index SOP PDFs
+
+**Admin**
+- Register/Login (with invite token)
+- Upload SOP PDFs
+- Delete SOP documents
+- Trigger Re‑indexing
+- Monitor Knowledge Base
+
+**User**
+- Register/Login
+- Ask Questions in Chat
+- View AI Answers
+- See Source Citations
+
+**Backend Services**
+- Authentication (JWT)
+- RBAC Middleware
+- SOP Management (upload, parse, chunk, embed, store)
+- Chat Service (retrieve chunks, call Gemini/Groq, return answers)
+
+---
+
+### 🖼️ Textual Diagram Sketch
+
+---
 ## Quick start
 
 ### Backend setup
