@@ -168,7 +168,7 @@ A full-stack AI-powered RAG system for SOP management and grounded Q&A with role
    - `GROQ_API_KEY=xxxxx`
    - `GOOGLE_CLIENT_ID=xxxxx`
    - `EMAIL_USER=xxxxx`
-   - `EMAIL_PASS=xxxxx`
+   - `EMAIL_PASS=app_password`
    - `FRONTEND_URL=http://localhost:5173`
 
 3. **Run backend (dev)**
