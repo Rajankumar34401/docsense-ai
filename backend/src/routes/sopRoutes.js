@@ -3,7 +3,7 @@
 // src/routes/sopRoutes.js
 import { Router } from "express";
 import multer from "multer";
-import { uploadSOP, deleteSOP, listSOPs,askQuestion } from "../controllers/sopController.js";
+import { uploadSOP, deleteSOP, listSOPs,askQuestion,getAdminLogs} from "../controllers/sopController.js";
 
 const router = Router();
 const upload = multer({
@@ -18,6 +18,7 @@ const upload = multer({
 router.post("/upload", upload.single("file"), uploadSOP);
 router.delete("/:name", deleteSOP);
 router.get("/list", listSOPs);
+router.get("/admin/logs", getAdminLogs);
 router.post("/ask", askQuestion); 
 
 export default router;

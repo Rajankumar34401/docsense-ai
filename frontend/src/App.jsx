@@ -1,11 +1,11 @@
 import React, { useState, useEffect } from 'react'; 
 import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
-import { GoogleOAuthProvider } from '@react-oauth/google'; // 👈 Extra Add kiya
+import { GoogleOAuthProvider } from '@react-oauth/google'; // 
 import Login from './pages/Login';
 import AdminDashboard from './pages/AdminDashboard';
 import UserChat from './pages/UserChat';
 import { GoogleLogin } from '@react-oauth/google';
-import ResetPassword from "./ResetPassword";
+import ResetPassword from "./pages/ResetPassword";
 
 export default function App() {
   const [user, setUser] = useState(() => {
@@ -20,7 +20,7 @@ export default function App() {
   };
 
   return (
-    // 👈 Bas ye wrapper add kiya hai, baaki sab as-it-is hai
+    
     <GoogleOAuthProvider clientId={import.meta.env.VITE_GOOGLE_CLIENT_ID}>
       <Router>
         <Routes>
