@@ -155,50 +155,36 @@ A full-stack AI-powered RAG system for SOP management and grounded Q&A with role
 ## 📊 UML Use Case Diagram
 
 The following diagram illustrates the main actors and use cases in **OpsMind AI**, showing both **frontend interactions** and **backend responsibilities**.
+useCaseDiagram
+    actor "Master Admin (Munish)" as MA
+    actor "Admin (Team)" as AD
+    actor "Regular User" as US
 
-### 🎭 Actors
-- **Head Admin** – Super administrator with full control
-- **Admin** – Manages SOP documents
-- **User (Employee)** – Queries SOPs via chat
-- **Frontend (React/Vite)** – UI layer for chat & dashboards
-- **Backend (Node.js/Express)** – API layer with RBAC enforcement
-- **MongoDB Atlas** – Vector DB for SOP chunks & embeddings
-- **Gemini API** – Generates embeddings
-- **Groq API** – Provides inference for answers
+    package "DocSens-AI System" {
+        usecase "Secure Login (JWT)" as UC1
+        usecase "Ask AI (Q&A)" as UC2
+        usecase "Upload/Process PDF" as UC3
+        usecase "Manage Admins (canInvite)" as UC4
+        usecase "Delete Documents" as UC5
+        usecase "View Source Citations" as UC6
+    }
 
----
+    MA --> UC1
+    MA --> UC2
+    MA --> UC3
+    MA --> UC4
+    MA --> UC5
+    MA --> UC6
 
-### 📌 Use Cases
+    AD --> UC1
+    AD --> UC2
+    AD --> UC3
+    AD --> UC5
+    AD --> UC6
 
-**Head Admin**
-- Register/Login (auto‑assigned via `.env` email)
-- Invite Admin (generate token)
-- Revoke Admin Access
-- Manage Admin Permissions
-- Upload/Delete/Re‑index SOP PDFs
-
-**Admin**
-- Register/Login (with invite token)
-- Upload SOP PDFs
-- Delete SOP documents
-- Trigger Re‑indexing
-- Monitor Knowledge Base
-
-**User**
-- Register/Login
-- Ask Questions in Chat
-- View AI Answers
-- See Source Citations
-
-**Backend Services**
-- Authentication (JWT)
-- RBAC Middleware
-- SOP Management (upload, parse, chunk, embed, store)
-- Chat Service (retrieve chunks, call Gemini/Groq, return answers)
-
----
-
-### 🖼️ Textual Diagram Sketch
+    US --> UC1
+    US --> UC2
+    US --> UC6
 
 ---
 ## Quick start
