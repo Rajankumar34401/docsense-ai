@@ -17,13 +17,13 @@ This project is developed as a **company-oriented academic project**, demonstrat
 
 ## 👥 Team Members & Roles
 
-| Name | Role | Responsibilities |
-|---|---|---|
-| **Munish Rajan (Leader)** | **Lead Integrator & System Architect** | System Architecture, Master Admin Logic (`canInvite`), MongoDB Vector Search Aggregation Pipeline, Context Window Logic, SSE Streaming, Groq Integration |
-| Suzzan Naaz | Authentication & Conversational UI Developer | Secure JWT & OAuth Authentication, Persistent Chat Storage, Real-Time AI Chat UI, Source Citation Interface, Session Management |
-| Heni Patel  | Frontend Developer                            | Login / Signup / Reset Password UI, Frontend State Management |
+| Name                     | Role                                   | Responsibilities |
+|--------------------------|----------------------------------------|------------------|
+| **Munish Rajan (Leader)** | **Lead Integrator & System Architect**  | System Architecture, Master Admin Logic (`canInvite`), MongoDB Vector Search Aggregation Pipeline, Context Window Logic, SSE Streaming, Groq Integration |
+| **Suzzan Naaz**           | Authentication & Conversational UI Developer | Secure JWT & OAuth Authentication, Persistent Chat Storage, Real-Time AI Chat UI, Source Citation Interface, Session & Token Management |
+| **Heni Patel**            | Frontend Developer                     | Login / Signup / Reset Password UI, Frontend State Management |
+| **Gagan**                 | Database & DevOps Specialist            | MongoDB Atlas Vector Indexing, Schema Design, Git Branching Strategy, Knowledge Base Storage |
 
-| Gagan | Database & DevOps Specialist | MongoDB Atlas Vector Indexing, Schema Design, Git Branching Strategy, Knowledge Base Storage |
 
 ---
 
