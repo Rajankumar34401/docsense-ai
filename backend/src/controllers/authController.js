@@ -72,7 +72,7 @@ export const login = async (req, res) => {
     const { password } = req.body;
     const user = await User.findOne({ email });
 
-    if (!user) return res.status(400).json({ message: "User not found!" });
+    if (!user) return res.status(400).json({ message: "User Not Found!" });
 
     if (user.role === 'admin' && !user.isApproved) {
       return res.status(403).json({ message: "Access Denied. Unauthorized Admin account." });
@@ -338,11 +338,11 @@ export const forgotPassword = async (req, res) => {
       html: `
         <div style="font-family: Arial; padding: 20px;">
           <h2>Password Reset</h2>
-          <p>You have requested for Password change. click the below button:</p>
+          <p>You have requested for password reset. Click the button below:</p>
           <a href="${resetLink}" style="background: #00684a; color: white; padding: 10px 20px; text-decoration: none; border-radius: 5px; display: inline-block; margin: 20px 0;">
             Reset Password
           </a>
-          <p>Ye Link will expire in one hour.</p>
+          <p>This link will expire within 1 hour.</p>
         </div>`
     };
 
