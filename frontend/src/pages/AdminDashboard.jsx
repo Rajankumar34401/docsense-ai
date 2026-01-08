@@ -177,10 +177,15 @@ export default function AdminDashboard({ user, logout }) {
       }
     } catch (err) { showToast("Delete failed", "error"); }
   };
+console.log("DOCS DATA:", docs);
+  const filteredDocs = Array.isArray(docs)
+  ? docs.filter(doc =>
+      doc.filename
+        .toLowerCase()
+        .includes(searchTerm.toLowerCase())
+    )
+  : [];
 
-  const filteredDocs = Array.isArray(docs) ? docs.filter(doc => 
-    (doc.filename || doc).toLowerCase().includes(searchTerm.toLowerCase())
-  ) : [];
 
   return (
     <div className="flex h-screen bg-[#f8fafc] text-gray-800 font-sans overflow-hidden">
@@ -260,7 +265,7 @@ export default function AdminDashboard({ user, logout }) {
                       <div key={i} className="bg-white rounded-[28px] p-7 flex items-center justify-between group border border-gray-100 shadow-sm hover:border-indigo-50">
                         <div className="flex items-center gap-6">
                           <div className="w-14 h-14 bg-[#f8fafc] rounded-2xl flex items-center justify-center text-3xl">📄</div>
-                          <span className="text-[#1e293b] font-bold text-xl">{doc.filename || doc}</span>
+                         <span className="text-[#1e293b] font-bold text-xl">{doc.filename}</span>
                         </div>
                         {confirmDeleteId === (doc.filename || doc) ? (
                           <div className="flex gap-2">
