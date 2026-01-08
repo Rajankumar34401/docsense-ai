@@ -175,6 +175,7 @@ A full-stack AI-powered RAG system for SOP management and grounded Q&A with role
    - `npm install`
 2. **Environment variables** (create `.env` in frontend root)
    - `VITE_API_BASE_URL=http://localhost:3000`
+   - `VITE_GOOGLE_CLIENT_ID=client_id`
 3. **Run frontend (dev)**
    - `npm run dev` → `http://localhost:5173`
 
@@ -182,7 +183,7 @@ A full-stack AI-powered RAG system for SOP management and grounded Q&A with role
 
 ## Step-by-step workflow
 
-### Step 3: Create user account (frontend)
+### Step 1: Create user account (frontend)
 
 - Open `http://localhost:5173`
 - Signup/Register a new account
@@ -192,7 +193,7 @@ A full-stack AI-powered RAG system for SOP management and grounded Q&A with role
   - View AI-generated answers
   - See source citations
 
-### Step 4: Head Admin auto assignment
+### Step 2: Head Admin auto assignment
 
 - Set `HEAD_ADMIN_EMAIL` in backend `.env`
 - First registration using that email becomes Head Admin
@@ -203,7 +204,7 @@ A full-stack AI-powered RAG system for SOP management and grounded Q&A with role
   - Upload/delete/re-index SOP documents
   - Control which admins can manage documents
 
-### Step 5: Invite admins (Head Admin only)
+### Step 3: Invite admins (Head Admin only)
 
 - Login with Head Admin email
 - Open Admin Panel → Invitation Section
@@ -211,7 +212,7 @@ A full-stack AI-powered RAG system for SOP management and grounded Q&A with role
 - Share the token with another user
 - Invited user registers using the token and becomes Admin
 
-### Step 6: Admin permissions control
+### Step 4: Admin permissions control
 
 - Head Admin can:
   - Grant full access to sub-admins
@@ -222,7 +223,7 @@ A full-stack AI-powered RAG system for SOP management and grounded Q&A with role
   - Delete SOP documents
   - Trigger re-indexing (if permitted)
 
-### Step 7: Upload SOP & knowledge base creation
+### Step 5: Upload SOP & knowledge base creation
 
 - Role: Admin / Head Admin
 - Upload SOP PDF via Admin Dashboard or Postman
@@ -232,7 +233,7 @@ A full-stack AI-powered RAG system for SOP management and grounded Q&A with role
   - Generates embeddings (Gemini)
   - Stores in MongoDB (vector fields)
 
-### Step 8: Ask questions (User Chat)
+### Step 6: Ask questions (User Chat)
 
 - Login as User / Admin / Head Admin
 - Go to User Chat page
@@ -241,14 +242,14 @@ A full-stack AI-powered RAG system for SOP management and grounded Q&A with role
 - If not found in SOP:
   - Responds: “I don’t know based on the provided documents.”
 
-### Step 9: Role-based access control (RBAC)
+### Step 7: Role-based access control (RBAC)
 
 - Head Admin: Full system control
 - Admin: SOP management (permission-based)
 - User: Chat & query only
 - RBAC enforced in backend APIs and frontend UI
 
-### Step 10: Verify system working
+### Step 8: Verify system working
 
 - Backend APIs running ✔
 - Frontend UI accessible ✔
