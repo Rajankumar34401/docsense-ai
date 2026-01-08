@@ -155,36 +155,8 @@ A full-stack AI-powered RAG system for SOP management and grounded Q&A with role
 ## 📊 UML Use Case Diagram
 
 The following diagram illustrates the main actors and use cases in **OpsMind AI**, showing both **frontend interactions** and **backend responsibilities**.
-useCaseDiagram
-    actor "Master Admin (Munish)" as MA
-    actor "Admin (Team)" as AD
-    actor "Regular User" as US
 
-    package "DocSens-AI System" {
-        usecase "Secure Login (JWT)" as UC1
-        usecase "Ask AI (Q&A)" as UC2
-        usecase "Upload/Process PDF" as UC3
-        usecase "Manage Admins (canInvite)" as UC4
-        usecase "Delete Documents" as UC5
-        usecase "View Source Citations" as UC6
-    }
-
-    MA --> UC1
-    MA --> UC2
-    MA --> UC3
-    MA --> UC4
-    MA --> UC5
-    MA --> UC6
-
-    AD --> UC1
-    AD --> UC2
-    AD --> UC3
-    AD --> UC5
-    AD --> UC6
-
-    US --> UC1
-    US --> UC2
-    US --> UC6
+![DocSens-AI Use Case Diagram](https://github.com/user-attachments/assets/21d8d93f-968d-4c7d-8785-1044be21519d)
 
 ---
 ## Quick start
