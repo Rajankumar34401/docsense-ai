@@ -127,7 +127,7 @@ export default function AdminDashboard({ user, logout }) {
   const strokeOffset = 502 - (502 * accuracy) / 100;
 
   const handleInvite = async () => {
-    if (!inviteEmail) return showToast("Email zaroori hai!", "error");
+    if (!inviteEmail) return showToast("please provide the email", "error");
     setIsInviting(true);
     try {
       const res = await fetch("http://localhost:5002/api/auth/invite", {
