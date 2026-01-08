@@ -19,10 +19,10 @@ This project is developed as a **company-oriented academic project**, demonstrat
 
 | Name                     | Role                                   | Responsibilities |
 |--------------------------|----------------------------------------|------------------|
-| **Munish Rajan (Leader)** | **Lead Integrator & System Architect**  | System Architecture, Master Admin Logic (`canInvite`), MongoDB Vector Search Aggregation Pipeline, Context Window Logic, SSE Streaming, Groq Integration |
-| **Suzzan Naaz**           | Authentication & Conversational UI Developer | Secure JWT & OAuth Authentication, Persistent Chat Storage, Real-Time AI Chat UI, Source Citation Interface, Session & Token Management |
-| **Heni Patel**            | Frontend Developer                     | Login / Signup / Reset Password UI, Frontend State Management |
-| **Gagan**                 | Database & DevOps Specialist            | MongoDB Atlas Vector Indexing, Schema Design, Git Branching Strategy, Knowledge Base Storage |
+| **Munish Rajan (Leader)** | **Lead Integrator & System Architect**  | System Architecture, Master Admin Logic (`canInvite`), MongoDB Vector Search Aggregation Pipeline, Context Window Logic, SSE Streaming, Groq Integration. |
+| **Suzzan Naaz**           | Authentication & Conversational UI Developer | Secure JWT & OAuth Authentication, Persistent Chat Storage, Real-Time AI Chat UI, Source Citation Interface, Session & Token Management. |
+| **Heni Patel**            | Frontend Developer                     | Login / Signup / Reset Password UI, Frontend State Management. |
+| **Gagan**                 | Database & DevOps Specialist            | MongoDB Atlas Vector Indexing, Schema Design, Git Branching Strategy, Knowledge Base Storage. |
 
 
 ---
@@ -141,7 +141,6 @@ DOCSENS_LEADER/
 
 A full-stack AI-powered RAG system for SOP management and grounded Q&A with role-based access control (RBAC).
 
----
 
 ## System overview
 
