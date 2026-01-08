@@ -166,7 +166,7 @@ A full-stack AI-powered RAG system for SOP management and grounded Q&A with role
    - `EMBEDDING_PROVIDER=gemini`
    - `GEMINI_API_KEY==xxxxx`
    - `GROQ_API_KEY=xxxxx`
-   - `GOOGLE_CLIENT_ID=xxxxx`
+   - `GOOGLE_CLIENT_ID=client_id`
    - `EMAIL_USER=xxxxx`
    - `EMAIL_PASS=app_password`
    - `FRONTEND_URL=http://localhost:5173`
