@@ -72,14 +72,14 @@ export const login = async (req, res) => {
     const { password } = req.body;
     const user = await User.findOne({ email });
 
-    if (!user) return res.status(400).json({ message: "User nahi mila!" });
+    if (!user) return res.status(400).json({ message: "User not found!" });
 
     if (user.role === 'admin' && !user.isApproved) {
       return res.status(403).json({ message: "Access Denied. Unauthorized Admin account." });
     }
 
     const isMatch = await bcrypt.compare(password, user.password);
-    if (!isMatch) return res.status(400).json({ message: "Galt password!" });
+    if (!isMatch) return res.status(400).json({ message: "Incorrect password!" });
 
     const token = jwt.sign(
       { id: user._id, email: user.email, role: user.role },
@@ -338,11 +338,11 @@ export const forgotPassword = async (req, res) => {
       html: `
         <div style="font-family: Arial; padding: 20px;">
           <h2>Password Reset</h2>
-          <p>Aapne password reset karne ki request ki hai. Niche diye gaye button par click karein:</p>
+          <p>You have requested for Password change. click the below button:</p>
           <a href="${resetLink}" style="background: #00684a; color: white; padding: 10px 20px; text-decoration: none; border-radius: 5px; display: inline-block; margin: 20px 0;">
             Reset Password
           </a>
-          <p>Ye link 1 ghante mein expire ho jayega.</p>
+          <p>Ye Link will expire in one hour.</p>
         </div>`
     };
 
