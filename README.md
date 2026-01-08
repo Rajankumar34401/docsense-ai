@@ -168,7 +168,7 @@ A full-stack AI-powered RAG system for SOP management and grounded Q&A with role
    - `GOOGLE_CLIENT_ID=xxxxx`
    - `EMAIL_USER=xxxxx`
    - `EMAIL_PASS=xxxxx`
-   - `ALLOWED_ORIGINS=http://localhost:5173`
+   - `FRONTEND_URL=http://localhost:5173`
 
 3. **Run backend (dev)**
    - `npm run dev` → `http://localhost:3000`
