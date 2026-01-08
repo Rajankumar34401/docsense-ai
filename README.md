@@ -160,7 +160,7 @@ A full-stack AI-powered RAG system for SOP management and grounded Q&A with role
    - `npm install`
 2. **Environment variables** (create `.env` in backend root)
    - `HEAD_ADMIN_EMAIL=your_email_here`
-   - `MONGODB_URI=mongodb+srv://...`
+   - `MONGO_URI=mongodb+srv://...`
    - `JWT_SECRET=super_secret_string`
    - `EMBEDDING_PROVIDER=gemini`
    - `EMBEDDING_API_KEY=xxxxx`
