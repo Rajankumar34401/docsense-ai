@@ -28,7 +28,7 @@ This project is developed as a **company-oriented academic project**, demonstrat
 
 ## 🧠 System Architecture Overview
 
-DocSens-AI follows a **multi-layered RAG architecture**:
+OpsMind-AI follows a **multi-layered RAG architecture**:
 
 1. **Document Ingestion**
    - PDF upload
