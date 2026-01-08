@@ -136,7 +136,7 @@ DOCSENS_LEADER/
 
 ---
 
-# Docsens-AI
+# Opsmind-AI
 
 A full-stack AI-powered RAG system for SOP management and grounded Q&A with role-based access control (RBAC).
 
