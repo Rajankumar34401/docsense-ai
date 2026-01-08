@@ -24,37 +24,34 @@ export const register = async (req, res) => {
     let finalApproval = true; 
     let canInvite = false;
 
-    // Check if Head Admin
+    // Head Admin
     if (email === HEAD_ADMIN_EMAIL) {
       finalRole = 'admin';
-      canInvite = true;
+      canInvite = true; // only head admin can invite others
     } 
-    // Check if invited by another Admin
+    // Invited by another admin
     else if (token) {
       const invite = await Invite.findOne({ email, token });
-      if (invite) {
-        if (invite.expiresAt > Date.now()) {
-          finalRole = 'admin';
-          canInvite = false; 
-          await Invite.deleteOne({ _id: invite._id }); 
-        } else {
-          return res.status(400).json({ message: "Invite link has expired." });
-        }
-      } else {
-        return res.status(400).json({ message: "Invalid invite link or email mismatch." });
+      if (!invite || invite.expiresAt < Date.now()) {
+        return res.status(400).json({ message: "Invalid or expired invite link." });
       }
+
+      finalRole = 'admin';
+      canInvite = false; // NEVER give canInvite automatically to invited admin
+      await Invite.deleteOne({ _id: invite._id });
     }
 
+    // Hash password
     const salt = await bcrypt.genSalt(10);
     const hashedPassword = await bcrypt.hash(password, salt);
 
     const newUser = new User({
-      name, 
-      email, 
+      name,
+      email,
       password: hashedPassword,
       role: finalRole,
-      isApproved: finalApproval, 
-      canInvite: canInvite
+      isApproved: finalApproval,
+      canInvite // Controlled strictly
     });
 
     await newUser.save();
@@ -117,26 +114,25 @@ export const googleLogin = async (req, res) => {
       canInvite = true;
     } else if (inviteToken) {
       const invite = await Invite.findOne({ email: normalizedEmail, token: inviteToken });
-      if (invite) {
-        finalRole = 'admin';
-        await Invite.deleteOne({ _id: invite._id }); 
+      if (!invite || invite.expiresAt < Date.now()) {
+        return res.status(400).json({ message: "Invalid or expired invite link." });
       }
+
+      finalRole = 'admin';
+      canInvite = false; // Strictly false for invited admins
+      await Invite.deleteOne({ _id: invite._id });
     }
 
     let user = await User.findOne({ email: normalizedEmail });
-    
     if (!user) {
       user = new User({
         name,
         email: normalizedEmail,
         role: finalRole,
         isApproved: true,
-        password: Math.random().toString(36).slice(-8)
+        password: Math.random().toString(36).slice(-8),
+        canInvite
       });
-      await user.save();
-    } else if (normalizedEmail === HEAD_ADMIN_EMAIL) {
-      user.role = 'admin';
-      user.canInvite = true;
       await user.save();
     }
 
@@ -155,6 +151,7 @@ export const googleLogin = async (req, res) => {
     res.status(500).json({ message: "Google Authentication failed" });
   }
 };
+
 export const getAllAdmins = async (req, res) => {
   try {
     // 1. Pehle dekho request karne wala user kaun hai (Database se fresh data lo)
@@ -187,19 +184,17 @@ export const createInvite = async (req, res) => {
     const { email } = req.body;
     const normalizedEmail = email.toLowerCase().trim();
 
-    // 1. Database se us Admin ki details nikalo jo invite bhejna chahta hai
     const requester = await User.findById(req.user.id);
     if (!requester) return res.status(404).json({ message: "Admin user not found" });
 
     const isHead = requester.email.toLowerCase().trim() === process.env.HEAD_ADMIN_EMAIL?.toLowerCase().trim();
 
-    // 2. SECURITY CHECK: Kya ye Head Admin hai? YA kya is Admin ko 'canInvite' access mila hai?
-    // Screenshot 403 yahan se trigger ho raha tha
+    // Security check: only Head Admin or admins explicitly allowed to invite
     if (!isHead && requester.canInvite !== true) {
       return res.status(403).json({ message: "Forbidden: You do not have permission to send invites" });
     }
 
-    // 3. Invite logic (Token generate karna)
+    // Generate token
     const token = crypto.randomBytes(32).toString('hex');
     await Invite.findOneAndUpdate(
       { email: normalizedEmail },
@@ -209,7 +204,7 @@ export const createInvite = async (req, res) => {
 
     const inviteLink = `${process.env.FRONTEND_URL}/signup?token=${token}&email=${normalizedEmail}`;
 
-    // 4. Email setup (Nodemailer)
+    // Send email via nodemailer
     const transporter = nodemailer.createTransport({
       host: 'smtp.gmail.com',
       port: 465,
@@ -224,24 +219,17 @@ export const createInvite = async (req, res) => {
       from: `"OpsMind AI Admin" <${process.env.EMAIL_USER}>`,
       to: email,
       subject: '🛡️ Invitation to join OpsMind AI as Admin',
-      html: `
-        <div style="font-family: Arial; padding: 20px; border: 1px solid #eee; border-radius: 10px;">
-          <h2 style="color: #4f46e5;">OpsMind AI</h2>
-          <p>You have been invited to join as an <strong>Administrator</strong>.</p>
-          <div style="margin: 30px 0;">
-            <a href="${inviteLink}" style="background: #4f46e5; color: white; padding: 12px 25px; text-decoration: none; border-radius: 5px;">
-              Accept Invitation & Register
-            </a>
-          </div>
-        </div>`
+      html: `<a href="${inviteLink}">Accept Invitation</a>`
     };
 
     await transporter.sendMail(mailOptions);
     res.json({ message: "Invite link sent!", inviteLink });
+
   } catch (err) {
     res.status(500).json({ message: "Email failed.", error: err.message });
   }
 };
+
 // --- 6. TOGGLE ACCESS (Head Admin control) ---
 export const toggleInviteAccess = async (req, res) => {
   try {
