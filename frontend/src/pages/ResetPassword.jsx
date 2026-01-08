@@ -14,11 +14,11 @@ export default function ResetPassword() {
 
     const handleReset = async (e) => {
         e.preventDefault();
-        if (password !== confirmPassword) return alert("Passwords match nahi ho rahe!");
+        if (password !== confirmPassword) return alert("Passwords Do not match");
 
         setLoading(true);
         try {
-            const res = await fetch(http://localhost:5002/api/auth/reset-password, {
+            const res = await fetch("http://localhost:5002/api/auth/reset-password", {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify({ token, password }),
@@ -31,7 +31,7 @@ export default function ResetPassword() {
                 alert(data.message);
             }
         } catch (err) {
-            alert("Kuch galat hua!");
+            alert("something error");
         } finally { setLoading(false); }
     };
 
