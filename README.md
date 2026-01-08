@@ -151,42 +151,7 @@ A full-stack AI-powered RAG system for SOP management and grounded Q&A with role
 - **RBAC roles:** Head Admin, Admin, User
 
 ---
-## 📊 UML Use Case Diagram
 
-The following diagram illustrates the main actors and use cases in **OpsMind AI**, showing both **frontend interactions** and **backend responsibilities**.
-graph LR
-
----
- useCaseDiagram
-    actor "Head Admin" as HeadAdmin
-    actor "Sub Admin" as SubAdmin
-    actor "User" as RegularUser
-
-    package "DocSens-AI System" {
-        usecase "Login and Authentication" as Login
-        usecase "AI Chat and View Results" as Chat
-        usecase "Invite Sub Admin" as Invite
-        usecase "Manage Permissions (Full Access or Limited)" as Permissions
-        usecase "Upload and Delete PDF" as Upload
-        usecase "View Document Citations" as Citations
-    }
-
-    HeadAdmin --> Login
-    HeadAdmin --> Chat
-    HeadAdmin --> Invite
-    HeadAdmin --> Permissions
-    HeadAdmin --> Upload
-    HeadAdmin --> Citations
-
-    SubAdmin --> Login
-    SubAdmin --> Chat
-    SubAdmin --> Upload
-    SubAdmin --> Citations
-
-    RegularUser --> Login
-    RegularUser --> Chat
-    RegularUser --> Citations
----
 ## Quick start
 
 ### Backend setup
