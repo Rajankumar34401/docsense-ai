@@ -155,8 +155,27 @@ A full-stack AI-powered RAG system for SOP management and grounded Q&A with role
 ## 📊 UML Use Case Diagram
 
 The following diagram illustrates the main actors and use cases in **OpsMind AI**, showing both **frontend interactions** and **backend responsibilities**.
+graph LR
+    subgraph "DocSens-AI System"
+        A[Login / Auth]
+        B[AI Chat & View]
+        C[Invite Sub-Admins]
+        D[Upload/Delete PDF]
+        E{Permission Check}
+    end
 
-![DocSens-AI Use Case Diagram](https://github.com/user-attachments/assets/21d8d93f-968d-4c7d-8785-1044be21519d)
+    HA((Head Admin)) --> A
+    HA --> B
+    HA --> C
+    HA --> D
+
+    SA((Sub-Admin)) --> A
+    SA --> B
+    SA --> E
+    E -- If Full Access --> D
+
+    RU((User)) --> A
+    RU --> B
 
 ---
 ## Quick start
