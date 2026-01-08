@@ -141,7 +141,6 @@ DOCSENS_LEADER/
 
 A full-stack AI-powered RAG system for SOP management and grounded Q&A with role-based access control (RBAC).
 
----
 
 ## System overview
 
@@ -156,27 +155,37 @@ A full-stack AI-powered RAG system for SOP management and grounded Q&A with role
 
 The following diagram illustrates the main actors and use cases in **OpsMind AI**, showing both **frontend interactions** and **backend responsibilities**.
 graph LR
-    subgraph "DocSens-AI System"
-        A[Login / Auth]
-        B[AI Chat & View]
-        C[Invite Sub-Admins]
-        D[Upload/Delete PDF]
-        E{Permission Check}
-    end
 
-    HA((Head Admin)) --> A
-    HA --> B
-    HA --> C
-    HA --> D
+---
+ useCaseDiagram
+    actor "Head Admin" as HeadAdmin
+    actor "Sub Admin" as SubAdmin
+    actor "User" as RegularUser
 
-    SA((Sub-Admin)) --> A
-    SA --> B
-    SA --> E
-    E -- If Full Access --> D
+    package "DocSens-AI System" {
+        usecase "Login and Authentication" as Login
+        usecase "AI Chat and View Results" as Chat
+        usecase "Invite Sub Admin" as Invite
+        usecase "Manage Permissions (Full Access or Limited)" as Permissions
+        usecase "Upload and Delete PDF" as Upload
+        usecase "View Document Citations" as Citations
+    }
 
-    RU((User)) --> A
-    RU --> B
+    HeadAdmin --> Login
+    HeadAdmin --> Chat
+    HeadAdmin --> Invite
+    HeadAdmin --> Permissions
+    HeadAdmin --> Upload
+    HeadAdmin --> Citations
 
+    SubAdmin --> Login
+    SubAdmin --> Chat
+    SubAdmin --> Upload
+    SubAdmin --> Citations
+
+    RegularUser --> Login
+    RegularUser --> Chat
+    RegularUser --> Citations
 ---
 ## Quick start
 
