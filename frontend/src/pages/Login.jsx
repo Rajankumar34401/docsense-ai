@@ -45,64 +45,77 @@ export default function Login({ setUser }) {
 
   // --- 2. FORGOT PASSWORD (Backend connection needed) ---
   const handleForgotPassword = async () => {
-    if (!formData.email) {
-      alert("Please enter your email address first!");
-      return;
-    }
-    setLoading(true);
-    try {
-      const res = await fetch(http://localhost:5002/api/auth/forgot-password, {
+  if (!formData.email) {
+    alert("Please enter your email address first!");
+    return;
+  }
+  setLoading(true);
+  try {
+    const res = await fetch(
+      "http://localhost:5002/api/auth/forgot-password",
+      {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ email: formData.email.toLowerCase().trim() }),
-      });
-      const data = await res.json();
-      alert(data.message || "If an account exists, a reset link has been sent.");
-    } catch (err) {
-      alert("Error sending reset email.");
-    } finally {
-      setLoading(false);
-    }
-  };
-
+        body: JSON.stringify({
+          email: formData.email.toLowerCase().trim(),
+        }),
+      }
+    );
+    const data = await res.json();
+    alert(data.message || "If an account exists, a reset link has been sent.");
+  } catch (err) {
+    alert("Error sending reset email.");
+  } finally {
+    setLoading(false);
+  }
+};
   const handleSubmit = async (e) => {
-    e.preventDefault();
-    setLoading(true);
-    const endpoint = isSignup ? "signup" : "login"; 
-    
-    const payload = isSignup 
-        ? { 
-          name: ${formData.firstName} ${formData.lastName}.trim(), 
-          email: formData.email.toLowerCase().trim(), 
-          password: formData.password,
-          token: inviteToken // Invite token state se le rahe hain
-        }
-      : { email: formData.email.toLowerCase().trim(), password: formData.password };
+  e.preventDefault();
+  setLoading(true);
 
-    try {
-      const res = await fetch(http://localhost:5002/api/auth/${endpoint}, {
+  const endpoint = isSignup ? "signup" : "login";
+
+  const payload = isSignup
+    ? {
+        name: `${formData.firstName} ${formData.lastName}`.trim(),
+        email: formData.email.toLowerCase().trim(),
+        password: formData.password,
+        token: inviteToken,
+      }
+    : {
+        email: formData.email.toLowerCase().trim(),
+        password: formData.password,
+      };
+
+  try {
+    const res = await fetch(
+      `http://localhost:5002/api/auth/${endpoint}`,
+      {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(payload),
-      });
-
-      const data = await res.json();
-      if (res.ok) {
-        if (isSignup) {
-          alert("Account Created! Now please log in.");
-          setIsSignup(false);
-        } else {
-          handleAuthComplete(data);
-        }
-      } else {
-        alert(data.message);
       }
-    } catch (err) {
-      console.error("Auth Error:", err);
-    } finally {
-      setLoading(false);
+    );
+
+    const data = await res.json();
+
+    if (res.ok) {
+      if (isSignup) {
+        alert("Account Created! Now please log in.");
+        setIsSignup(false);
+      } else {
+        handleAuthComplete(data);
+      }
+    } else {
+      alert(data.message);
     }
-  };
+  } catch (err) {
+    console.error("Auth Error:", err);
+    alert("Something went wrong. Please try again.");
+  } finally {
+    setLoading(false);
+  }
+};
 
   const handleGoogleSuccess = async (resToken) => {
     try {
@@ -164,18 +177,18 @@ export default function Login({ setUser }) {
             <div className="grid grid-cols-2 gap-4">
               <div className="flex flex-col space-y-2">
                 <label className="text-[11px] font-black text-gray-400 uppercase tracking-widest ml-1">First Name*</label>
-                <input type="text" name="firstName" required placeholder="Rajan" className="bg-gray-50 border border-gray-200 focus:border-[#00684a] outline-none px-4 py-3 rounded-xl font-medium" onChange={handleChange} />
+                <input type="text" name="firstName" required placeholder="first name" className="bg-gray-50 border border-gray-200 focus:border-[#00684a] outline-none px-4 py-3 rounded-xl font-medium" onChange={handleChange} />
               </div>
               <div className="flex flex-col space-y-2">
                 <label className="text-[11px] font-black text-gray-400 uppercase tracking-widest ml-1">Last Name*</label>
-                <input type="text" name="lastName" required placeholder="Kumar" className="bg-gray-50 border border-gray-200 focus:border-[#00684a] outline-none px-4 py-3 rounded-xl font-medium" onChange={handleChange} />
+                <input type="text" name="lastName" required placeholder="last name" className="bg-gray-50 border border-gray-200 focus:border-[#00684a] outline-none px-4 py-3 rounded-xl font-medium" onChange={handleChange} />
               </div>
             </div>
           )}
 
           <div className="flex flex-col space-y-2">
             <label className="text-[11px] font-black text-gray-400 uppercase tracking-widest ml-1">Email Address*</label>
-            <input type="email" name="email" required value={formData.email} placeholder="rajan@opsmind.ai" className="bg-gray-50 border border-gray-200 focus:border-[#00684a] outline-none px-4 py-3 rounded-xl font-medium" onChange={handleChange} />
+            <input type="email" name="email" required value={formData.email} placeholder="email@opsmind.ai" className="bg-gray-50 border border-gray-200 focus:border-[#00684a] outline-none px-4 py-3 rounded-xl font-medium" onChange={handleChange} />
           </div>
 
           <div className="flex flex-col space-y-2 relative">
